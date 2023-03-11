@@ -1,35 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./FeaturedProducts.scss";
 import Card from "../Card/Card";
+import axios from "axios";
 
 const FeaturedProducts = ({ type }) => {
-  const data = [
-    {
-      id: 1,
-      img: "https://images.pexels.com/photos/1549200/pexels-photo-1549200.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      img2: "https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      title: "Dress1",
-      isNew: true,
-      oldPrice: 19,
-      price: 12,
-    },
-    {
-      id: 2,
-      img: "https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      title: "Dress2",
-      isNew: true,
-      oldPrice: 19,
-      price: 12,
-    },
-    {
-      id: 3,
-      img: "https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      title: "Dress3",
-      isNew: false,
-      oldPrice: 19,
-      price: 12,
-    },
-  ];
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          process.env.REACT_APP_API_URL + "/products?populate=*",
+          {
+            header: {
+              Authorization: "bearer" + process.env.REACT_APP_API_TOKEN,
+            },
+          }
+        );
+        setData(res.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="featuredProducts">
